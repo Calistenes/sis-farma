@@ -14,11 +14,11 @@ alter table public.profiles enable row level security;
 
 create policy "Usuários veem o próprio perfil"
   on public.profiles for select
-  using (auth.uid() = id);
+  using ((select auth.uid()) = id);
 
 create policy "Usuários atualizam o próprio perfil"
   on public.profiles for update
-  using (auth.uid() = id);
+  using ((select auth.uid()) = id);
 
 -- Categorias de receita/despesa, por usuário
 create table if not exists public.categories (
@@ -34,8 +34,8 @@ alter table public.categories enable row level security;
 
 create policy "Usuários gerenciam as próprias categorias"
   on public.categories for all
-  using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id)
+  with check ((select auth.uid()) = user_id);
 
 create index if not exists categories_user_id_idx on public.categories (user_id);
 
@@ -55,11 +55,12 @@ alter table public.transactions enable row level security;
 
 create policy "Usuários gerenciam as próprias transações"
   on public.transactions for all
-  using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id)
+  with check ((select auth.uid()) = user_id);
 
 create index if not exists transactions_user_id_idx on public.transactions (user_id);
 create index if not exists transactions_user_occurred_idx on public.transactions (user_id, occurred_on desc);
+create index if not exists transactions_category_id_idx on public.transactions (category_id);
 
 -- Cria perfil + categorias padrão automaticamente ao registrar usuário
 create or replace function public.handle_new_user()
@@ -90,3 +91,6 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
+
+-- Função só deve rodar via trigger, nunca chamada diretamente pela API pública
+revoke execute on function public.handle_new_user() from public, anon, authenticated;
