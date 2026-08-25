@@ -45,7 +45,8 @@ export async function createPreapproval(params: {
   });
 
   if (!response.ok) {
-    throw new Error(`Mercado Pago: falha ao criar assinatura (${response.status}).`);
+    const body = await response.text();
+    throw new Error(`Mercado Pago ${response.status}: ${body}`);
   }
 
   return response.json();

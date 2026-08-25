@@ -44,8 +44,12 @@ export async function startProCheckout(): Promise<ProActionState> {
       .from("profiles")
       .update({ mp_preapproval_id: preapproval.id })
       .eq("id", user.id);
-  } catch {
-    return { error: "Não foi possível iniciar a assinatura. Tente novamente." };
+  } catch (err) {
+    return {
+      error: `Não foi possível iniciar a assinatura. Detalhe: ${
+        err instanceof Error ? err.message : String(err)
+      }`,
+    };
   }
 
   redirect(initPoint);
@@ -79,8 +83,12 @@ export async function cancelProSubscription(): Promise<ProActionState> {
       .from("profiles")
       .update({ plan: "free", plan_updated_at: new Date().toISOString() })
       .eq("id", user.id);
-  } catch {
-    return { error: "Não foi possível cancelar a assinatura. Tente novamente." };
+  } catch (err) {
+    return {
+      error: `Não foi possível cancelar a assinatura. Detalhe: ${
+        err instanceof Error ? err.message : String(err)
+      }`,
+    };
   }
 
   revalidatePath("/dashboard/settings");
