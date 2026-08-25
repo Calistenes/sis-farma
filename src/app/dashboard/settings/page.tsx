@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getProfile, countTransactionsInRange } from "@/lib/queries";
 import { monthlyLimit, monthRange, PLAN_LABEL } from "@/lib/plan";
 import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { SubscribeProForm, CancelProForm } from "./ProActions";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -39,17 +39,7 @@ export default async function SettingsPage() {
             : `${used} de ${limit} lançamentos usados neste mês.`}
         </p>
 
-        {profile.plan === "free" && (
-          <div className="mt-4 rounded-lg bg-indigo-50 p-4">
-            <p className="text-sm text-indigo-900">
-              Assine o plano Pro (R$ 29/mês) para lançamentos ilimitados e
-              suporte prioritário.
-            </p>
-            <Button className="mt-3" disabled title="Integração de pagamento em breve">
-              Assinar Pro (em breve)
-            </Button>
-          </div>
-        )}
+        {profile.plan === "free" ? <SubscribeProForm /> : <CancelProForm />}
       </Card>
     </div>
   );
