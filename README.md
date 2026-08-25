@@ -36,6 +36,25 @@ npm run dev
 
 Acesse http://localhost:3000.
 
+### 4. Deploy (Netlify)
+
+Já existe um projeto Supabase (`rendaflow`) e um site Netlify (`rendaflow`,
+https://app.netlify.com/projects/rendaflow) criados, com as env vars
+`NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` já configuradas
+nele. Falta só conectar o repositório para builds automáticos:
+
+1. Acesse https://app.netlify.com/projects/rendaflow.
+2. Vá em **Project configuration → Build & deploy → Continuous deployment**
+   (ou **Link repository**, se aparecer na tela inicial do site).
+3. Conecte ao GitHub e selecione `Calistenes/sis-farma`, branch
+   `claude/sistema-gerencia-renda-a2rzs8` (ou `main`, depois que o PR for
+   mergeado).
+4. O Netlify detecta o Next.js automaticamente e usa o `netlify.toml` deste
+   repo (`npm run build`, Node 22). Nenhuma configuração extra é necessária.
+5. Depois do primeiro deploy, revise em **Site configuration → Access
+   control** se o site deve ficar público (por padrão pode estar exigindo
+   login do time/SSO).
+
 ## Estrutura
 
 - `src/app/page.tsx` — landing page com pricing (Gratuito / Pro).
