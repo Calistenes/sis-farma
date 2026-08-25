@@ -19,7 +19,6 @@ export type Preapproval = {
 
 export async function createPreapproval(params: {
   userId: string;
-  email: string;
   backUrl: string;
 }): Promise<Preapproval> {
   const response = await fetch(`${MP_API}/preapproval`, {
@@ -30,9 +29,11 @@ export async function createPreapproval(params: {
       "X-Idempotency-Key": crypto.randomUUID(),
     },
     body: JSON.stringify({
+      // Sem payer_email: a pessoa loga com a própria conta Mercado Pago na
+      // hora do checkout (funciona em modo teste e produção sem conflito
+      // entre comprador/vendedor "real" x "de teste").
       reason: "RendaFlow Pro",
       external_reference: params.userId,
-      payer_email: params.email,
       back_url: params.backUrl,
       auto_recurring: {
         frequency: 1,

@@ -22,7 +22,7 @@ export async function startProCheckout(): Promise<ProActionState> {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user?.email) {
+  if (!user) {
     return { error: "Sessão expirada. Faça login novamente." };
   }
 
@@ -30,7 +30,6 @@ export async function startProCheckout(): Promise<ProActionState> {
   try {
     const preapproval = await createPreapproval({
       userId: user.id,
-      email: user.email,
       backUrl: `${await siteOrigin()}/dashboard/settings`,
     });
 
