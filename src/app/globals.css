@@ -1,8 +1,29 @@
 @import "tailwindcss";
 
+/* Tailwind v4: faz o `dark:` responder a uma classe .dark na árvore, em vez
+   de só prefers-color-scheme — necessário pro toggle manual (recurso Pro). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #0f172a;
+
+  --chart-grid: #e1e0d9;
+  --chart-muted: #898781;
+  --chart-income: #2a78d6;
+  --chart-expense: #e34948;
+  --chart-cursor: rgba(15, 23, 42, 0.04);
+}
+
+.dark {
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+
+  --chart-grid: #2c2c2a;
+  --chart-muted: #a3a29b;
+  --chart-income: #3987e5;
+  --chart-expense: #e66767;
+  --chart-cursor: rgba(241, 245, 249, 0.06);
 }
 
 @theme inline {

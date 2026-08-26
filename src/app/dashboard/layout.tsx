@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getProfile } from "@/lib/queries";
 import { Sidebar } from "@/components/dashboard/Sidebar";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 export default async function DashboardLayout({
   children,
@@ -20,9 +21,11 @@ export default async function DashboardLayout({
   const profile = await getProfile(supabase, user.id);
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <Sidebar plan={profile.plan} />
-      <main className="flex-1 px-8 py-8">{children}</main>
-    </div>
+    <ThemeProvider isPro={profile.plan === "pro"}>
+      <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900">
+        <Sidebar plan={profile.plan} />
+        <main className="flex-1 px-8 py-8">{children}</main>
+      </div>
+    </ThemeProvider>
   );
 }

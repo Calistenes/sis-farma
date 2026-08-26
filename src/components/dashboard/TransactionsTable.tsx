@@ -15,7 +15,7 @@ export function TransactionsTable({
 
   if (transactions.length === 0) {
     return (
-      <p className="py-8 text-center text-sm text-slate-500">
+      <p className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">
         Nenhum lançamento ainda.
       </p>
     );
@@ -25,7 +25,7 @@ export function TransactionsTable({
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-slate-200 text-left text-slate-500">
+          <tr className="border-b border-slate-200 text-left text-slate-500 dark:border-slate-700 dark:text-slate-400">
             <th className="py-2 pr-4 font-medium">Data</th>
             <th className="py-2 pr-4 font-medium">Descrição</th>
             <th className="py-2 pr-4 font-medium">Categoria</th>
@@ -41,11 +41,14 @@ export function TransactionsTable({
             const isIncome = transaction.type === "income";
 
             return (
-              <tr key={transaction.id} className="border-b border-slate-100">
-                <td className="py-3 pr-4 whitespace-nowrap text-slate-600">
+              <tr
+                key={transaction.id}
+                className="border-b border-slate-100 dark:border-slate-700"
+              >
+                <td className="py-3 pr-4 whitespace-nowrap text-slate-600 dark:text-slate-300">
                   {formatDate(transaction.occurred_on)}
                 </td>
-                <td className="py-3 pr-4 text-slate-900">
+                <td className="py-3 pr-4 text-slate-900 dark:text-slate-100">
                   {transaction.description || "—"}
                 </td>
                 <td className="py-3 pr-4">
@@ -60,7 +63,7 @@ export function TransactionsTable({
                       {category.name}
                     </span>
                   ) : (
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-slate-400 dark:text-slate-500">
                       Sem categoria
                     </span>
                   )}
@@ -78,7 +81,7 @@ export function TransactionsTable({
                       <input type="hidden" name="id" value={transaction.id} />
                       <button
                         type="submit"
-                        className="text-xs font-medium text-slate-400 hover:text-red-600"
+                        className="text-xs font-medium text-slate-400 hover:text-red-600 dark:text-slate-500 dark:hover:text-red-400"
                       >
                         Excluir
                       </button>

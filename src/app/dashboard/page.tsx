@@ -66,8 +66,10 @@ export default async function DashboardOverviewPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Visão geral</h1>
-        <p className="text-sm text-slate-500">
+        <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+          Visão geral
+        </h1>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           Resumo do mês atual e histórico dos últimos 6 meses.
         </p>
       </div>
@@ -79,7 +81,7 @@ export default async function DashboardOverviewPage() {
       />
 
       <Card>
-        <h2 className="mb-2 text-base font-semibold text-slate-900">
+        <h2 className="mb-2 text-base font-semibold text-slate-900 dark:text-slate-100">
           Receitas x despesas
         </h2>
         <MonthlyChart data={chartData} />
@@ -87,7 +89,7 @@ export default async function DashboardOverviewPage() {
 
       <Card>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-base font-semibold text-slate-900">
+          <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">
             Últimos lançamentos
           </h2>
         </div>

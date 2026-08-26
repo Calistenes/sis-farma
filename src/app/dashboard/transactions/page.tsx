@@ -30,11 +30,13 @@ export default async function TransactionsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Lançamentos</h1>
-        <p className="text-sm text-slate-500 capitalize">
+        <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+          Lançamentos
+        </h1>
+        <p className="text-sm text-slate-500 capitalize dark:text-slate-400">
           {MONTH_LABEL.format(start)}
           {limit !== null && (
-            <span className="ml-2 text-slate-400">
+            <span className="ml-2 text-slate-400 dark:text-slate-500">
               · {transactions.length}/{limit} lançamentos usados
             </span>
           )}
@@ -42,7 +44,7 @@ export default async function TransactionsPage() {
       </div>
 
       <Card>
-        <h2 className="mb-4 text-base font-semibold text-slate-900">
+        <h2 className="mb-4 text-base font-semibold text-slate-900 dark:text-slate-100">
           Novo lançamento
         </h2>
         <NewTransactionForm categories={categories} />

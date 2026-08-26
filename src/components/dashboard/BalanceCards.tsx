@@ -17,7 +17,11 @@ export function BalanceCards({
   expense: number;
 }) {
   const items = [
-    { label: "Saldo do mês", value: balance, tone: "text-slate-900" },
+    {
+      label: "Saldo do mês",
+      value: balance,
+      tone: "text-slate-900 dark:text-slate-100",
+    },
     { label: "Receitas do mês", value: income, tone: "text-[#0ca30c]" },
     { label: "Despesas do mês", value: expense, tone: "text-[#d03b3b]" },
   ];
@@ -26,7 +30,9 @@ export function BalanceCards({
     <div className="grid gap-4 sm:grid-cols-3">
       {items.map((item) => (
         <Card key={item.label}>
-          <p className="text-sm font-medium text-slate-500">{item.label}</p>
+          <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+            {item.label}
+          </p>
           <p className={`mt-2 text-2xl font-semibold ${item.tone}`}>
             {formatCurrency(item.value)}
           </p>
