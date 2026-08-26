@@ -45,11 +45,12 @@ valores do passo anterior, e `SUPABASE_SERVICE_ROLE_KEY` (mesma tela, campo
 
 ### 4. Assistente de IA (recurso Pro)
 
-Em https://console.anthropic.com, gere uma API key e cole em
-`ANTHROPIC_API_KEY`. Usada só no servidor (rotas `/api/assistant/*`), nunca
-exposta ao navegador. O modelo usado é `claude-opus-5`. Cada pergunta no chat
-ou análise gerada consome créditos da conta Anthropic — é uma cobrança real,
-proporcional ao uso.
+Em https://aistudio.google.com/apikey, gere uma API key e cole em
+`GEMINI_API_KEY`. Usada só no servidor (rotas `/api/assistant/*`), nunca
+exposta ao navegador. O modelo usado é `gemini-2.5-flash`. Cada pergunta no
+chat ou análise gerada consome créditos da conta Google AI — é uma cobrança
+real, proporcional ao uso (o Gemini tem um nível gratuito com limite de
+requisições por minuto/dia, verifique o plano da sua chave).
 
 ### 5. Rodar localmente
 
@@ -66,7 +67,7 @@ Já existe um projeto Supabase (`rendaflow`) e um site Netlify (`rendaflow`,
 https://app.netlify.com/projects/rendaflow) criados, com as env vars
 `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` já configuradas
 nele. Adicione também `SUPABASE_SERVICE_ROLE_KEY`, `MERCADOPAGO_ACCESS_TOKEN`,
-`MERCADOPAGO_WEBHOOK_SECRET` e `ANTHROPIC_API_KEY` nas env vars do site.
+`MERCADOPAGO_WEBHOOK_SECRET` e `GEMINI_API_KEY` nas env vars do site.
 Falta só conectar o repositório para builds automáticos:
 
 1. Acesse https://app.netlify.com/projects/rendaflow.

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import { ApiError } from "@google/genai";
 import { requireProUser } from "@/lib/require-pro";
 import { buildFinancialSummary } from "@/lib/ai-context";
-import { getAnthropicClient, AI_MODEL } from "@/lib/anthropic";
+import { getGeminiClient, GEMINI_MODEL } from "@/lib/gemini";
 
 const INSIGHTS_PROMPT = `Você é o assistente financeiro do RendaFlow. Analise o resumo financeiro do usuário abaixo e escreva uma análise curta em português do Brasil, em três seções com esses títulos exatos:
 
@@ -27,33 +27,30 @@ export async function POST() {
   );
 
   try {
-    const client = getAnthropicClient();
-    const response = await client.messages.create({
-      model: AI_MODEL,
-      max_tokens: 1024,
-      system: INSIGHTS_PROMPT,
-      messages: [
+    const client = getGeminiClient();
+    const response = await client.models.generateContent({
+      model: GEMINI_MODEL,
+      contents: [
         {
           role: "user",
-          content: `Resumo financeiro:\n${financialSummary}`,
+          parts: [{ text: `Resumo financeiro:\n${financialSummary}` }],
         },
       ],
+      config: {
+        systemInstruction: INSIGHTS_PROMPT,
+        maxOutputTokens: 1024,
+      },
     });
 
-    const text = response.content
-      .filter((block): block is Anthropic.TextBlock => block.type === "text")
-      .map((block) => block.text)
-      .join("\n");
-
-    return NextResponse.json({ insights: text });
+    return NextResponse.json({ insights: response.text ?? "" });
   } catch (err) {
-    if (err instanceof Anthropic.RateLimitError) {
+    if (err instanceof ApiError && err.status === 429) {
       return NextResponse.json(
         { error: "Muitas requisições agora, tente de novo em instantes." },
         { status: 429 }
       );
     }
-    if (err instanceof Anthropic.APIError) {
+    if (err instanceof ApiError) {
       return NextResponse.json(
         { error: "O assistente não conseguiu gerar a análise agora." },
         { status: 502 }

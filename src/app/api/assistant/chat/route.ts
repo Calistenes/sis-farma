@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
+import { ApiError } from "@google/genai";
 import { requireProUser } from "@/lib/require-pro";
 import { buildFinancialSummary } from "@/lib/ai-context";
-import { getAnthropicClient, AI_MODEL, ASSISTANT_SYSTEM_PROMPT } from "@/lib/anthropic";
+import { getGeminiClient, GEMINI_MODEL, ASSISTANT_SYSTEM_PROMPT } from "@/lib/gemini";
 
 const MAX_MESSAGES = 20;
 const MAX_MESSAGE_LENGTH = 2000;
@@ -44,28 +44,28 @@ export async function POST(request: Request) {
   );
 
   try {
-    const client = getAnthropicClient();
-    const response = await client.messages.create({
-      model: AI_MODEL,
-      max_tokens: 1024,
-      system: `${ASSISTANT_SYSTEM_PROMPT}\n\nResumo financeiro do usuário:\n${financialSummary}`,
-      messages: messages.map((m) => ({ role: m.role, content: m.content })),
+    const client = getGeminiClient();
+    const response = await client.models.generateContent({
+      model: GEMINI_MODEL,
+      contents: messages.map((m) => ({
+        role: m.role === "assistant" ? "model" : "user",
+        parts: [{ text: m.content }],
+      })),
+      config: {
+        systemInstruction: `${ASSISTANT_SYSTEM_PROMPT}\n\nResumo financeiro do usuário:\n${financialSummary}`,
+        maxOutputTokens: 1024,
+      },
     });
 
-    const text = response.content
-      .filter((block): block is Anthropic.TextBlock => block.type === "text")
-      .map((block) => block.text)
-      .join("\n");
-
-    return NextResponse.json({ reply: text });
+    return NextResponse.json({ reply: response.text ?? "" });
   } catch (err) {
-    if (err instanceof Anthropic.RateLimitError) {
+    if (err instanceof ApiError && err.status === 429) {
       return NextResponse.json(
         { error: "Muitas requisições agora, tente de novo em instantes." },
         { status: 429 }
       );
     }
-    if (err instanceof Anthropic.APIError) {
+    if (err instanceof ApiError) {
       return NextResponse.json(
         { error: "O assistente não conseguiu responder agora." },
         { status: 502 }
