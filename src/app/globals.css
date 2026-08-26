@@ -13,6 +13,24 @@
   --chart-income: #2a78d6;
   --chart-expense: #e34948;
   --chart-cursor: rgba(15, 23, 42, 0.04);
+
+  --accent: #4f46e5;
+  --accent-hover: #6366f1;
+}
+
+[data-accent="emerald"] {
+  --accent: #059669;
+  --accent-hover: #10b981;
+}
+
+[data-accent="violet"] {
+  --accent: #7c3aed;
+  --accent-hover: #8b5cf6;
+}
+
+[data-accent="rose"] {
+  --accent: #e11d48;
+  --accent-hover: #f43f5e;
 }
 
 .dark {
@@ -29,6 +47,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

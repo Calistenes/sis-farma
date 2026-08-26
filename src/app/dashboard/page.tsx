@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import {
   getCategories,
+  getProfile,
   getRecentTransactions,
   getTransactionsSince,
 } from "@/lib/queries";
@@ -8,6 +9,7 @@ import { Card } from "@/components/ui/Card";
 import { BalanceCards } from "@/components/dashboard/BalanceCards";
 import { MonthlyChart, type MonthlyPoint } from "@/components/dashboard/MonthlyChart";
 import { TransactionsTable } from "@/components/dashboard/TransactionsTable";
+import { InsightsCard } from "@/components/dashboard/InsightsCard";
 
 const MONTH_LABEL = new Intl.DateTimeFormat("pt-BR", { month: "short" });
 
@@ -25,11 +27,12 @@ export default async function DashboardOverviewPage() {
   const now = new Date();
   const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
 
-  const [categories, recentTransactions, transactionsInWindow] =
+  const [categories, recentTransactions, transactionsInWindow, profile] =
     await Promise.all([
       getCategories(supabase, userId),
       getRecentTransactions(supabase, userId, 8),
       getTransactionsSince(supabase, userId, sixMonthsAgo),
+      getProfile(supabase, userId),
     ]);
 
   const months: { key: string; label: string }[] = [];
@@ -79,6 +82,8 @@ export default async function DashboardOverviewPage() {
         income={currentMonth.income}
         expense={currentMonth.expense}
       />
+
+      <InsightsCard isPro={profile.plan === "pro"} />
 
       <Card>
         <h2 className="mb-2 text-base font-semibold text-slate-900 dark:text-slate-100">

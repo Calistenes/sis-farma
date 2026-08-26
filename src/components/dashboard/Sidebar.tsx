@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: "/dashboard", label: "Visão geral" },
   { href: "/dashboard/transactions", label: "Lançamentos" },
   { href: "/dashboard/categories", label: "Categorias" },
+  { href: "/dashboard/assistant", label: "Assistente IA" },
   { href: "/dashboard/settings", label: "Configurações" },
 ];
 
@@ -39,7 +40,7 @@ export function Sidebar({ plan }: { plan: Plan }) {
               href={item.href}
               className={`block rounded-lg px-3 py-2 text-sm font-medium ${
                 active
-                  ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400"
+                  ? "bg-slate-100 text-accent dark:bg-slate-700"
                   : "text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700"
               }`}
             >

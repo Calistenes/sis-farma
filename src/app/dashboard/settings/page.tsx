@@ -4,6 +4,7 @@ import { monthlyLimit, monthRange, PLAN_LABEL } from "@/lib/plan";
 import { Card } from "@/components/ui/Card";
 import { SubscribeProForm, CancelProForm } from "./ProActions";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { AccentPicker } from "@/components/AccentPicker";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -53,7 +54,10 @@ export default async function SettingsPage() {
         <h2 className="mb-4 text-base font-semibold text-slate-900 dark:text-slate-100">
           Aparência
         </h2>
-        <ThemeToggle />
+        <div className="space-y-3">
+          <ThemeToggle />
+          <AccentPicker />
+        </div>
       </Card>
     </div>
   );

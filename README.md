@@ -43,7 +43,15 @@ valores do passo anterior, e `SUPABASE_SERVICE_ROLE_KEY` (mesma tela, campo
    `profiles.plan = 'pro'` usando o `service_role` (usuários não conseguem
    alterar o próprio plano direto pela API do Supabase — só essa rota pode).
 
-### 4. Rodar localmente
+### 4. Assistente de IA (recurso Pro)
+
+Em https://console.anthropic.com, gere uma API key e cole em
+`ANTHROPIC_API_KEY`. Usada só no servidor (rotas `/api/assistant/*`), nunca
+exposta ao navegador. O modelo usado é `claude-opus-5`. Cada pergunta no chat
+ou análise gerada consome créditos da conta Anthropic — é uma cobrança real,
+proporcional ao uso.
+
+### 5. Rodar localmente
 
 ```bash
 npm install
@@ -52,14 +60,14 @@ npm run dev
 
 Acesse http://localhost:3000.
 
-### 5. Deploy (Netlify)
+### 6. Deploy (Netlify)
 
 Já existe um projeto Supabase (`rendaflow`) e um site Netlify (`rendaflow`,
 https://app.netlify.com/projects/rendaflow) criados, com as env vars
 `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` já configuradas
-nele. Adicione também `SUPABASE_SERVICE_ROLE_KEY`, `MERCADOPAGO_ACCESS_TOKEN`
-e `MERCADOPAGO_WEBHOOK_SECRET` nas env vars do site. Falta só conectar o
-repositório para builds automáticos:
+nele. Adicione também `SUPABASE_SERVICE_ROLE_KEY`, `MERCADOPAGO_ACCESS_TOKEN`,
+`MERCADOPAGO_WEBHOOK_SECRET` e `ANTHROPIC_API_KEY` nas env vars do site.
+Falta só conectar o repositório para builds automáticos:
 
 1. Acesse https://app.netlify.com/projects/rendaflow.
 2. Vá em **Project configuration → Build & deploy → Continuous deployment**
@@ -85,13 +93,21 @@ repositório para builds automáticos:
   do Mercado Pago.
 - `src/app/api/webhooks/mercadopago` — webhook que confirma pagamento e
   libera/revoga o plano Pro.
+- `src/lib/ai-context.ts` — resume as finanças do usuário em texto pra
+  alimentar a IA (histórico mensal, categorias, últimos lançamentos).
+- `src/app/api/assistant/chat` e `/insights` — rotas da IA (Pro-gated no
+  servidor via `src/lib/require-pro.ts`, não só na UI).
+- `src/components/ThemeProvider.tsx` — tema escuro/claro e cor de destaque
+  (Pro), aplicados num wrapper local (não em `<html>`) pra não vazar pra
+  landing/login.
 - `supabase/migrations` — schema SQL e RLS.
 
 ## Modelo de negócio
 
 - **Gratuito**: até 50 lançamentos/mês, categorias ilimitadas, dashboard.
-- **Pro (R$ 29/mês)**: lançamentos ilimitados, suporte prioritário. Cobrança
-  recorrente via Mercado Pago (ver seção de setup acima).
+- **Pro (R$ 29/mês)**: lançamentos ilimitados, suporte prioritário, tema
+  escuro + cor de destaque personalizável, e assistente de IA (chat +
+  análise/projeção de gastos). Cobrança recorrente via Mercado Pago.
 
 ## Próximos passos sugeridos
 
@@ -101,3 +117,7 @@ repositório para builds automáticos:
 - Mostrar na tela de Configurações o status "pagamento em confirmação"
   logo após voltar do checkout do Mercado Pago (hoje a tela só reflete o
   plano depois que o webhook processa, geralmente em segundos).
+- Persistir o histórico de chat da IA (hoje é só da sessão do navegador,
+  perde ao recarregar a página).
+- Rate limiting nas rotas `/api/assistant/*` pra conter custo em caso de uso
+  abusivo (hoje só limita tamanho/quantidade de mensagens por request).
