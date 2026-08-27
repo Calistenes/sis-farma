@@ -44,6 +44,7 @@ export async function POST() {
 
     return NextResponse.json({ insights: response.text ?? "" });
   } catch (err) {
+    console.error("[assistant/insights] Gemini error:", err);
     if (err instanceof ApiError && err.status === 429) {
       return NextResponse.json(
         { error: "Muitas requisições agora, tente de novo em instantes." },
@@ -52,12 +53,18 @@ export async function POST() {
     }
     if (err instanceof ApiError) {
       return NextResponse.json(
-        { error: "O assistente não conseguiu gerar a análise agora." },
+        {
+          error: "O assistente não conseguiu gerar a análise agora.",
+          debug: `status=${err.status} message=${err.message}`,
+        },
         { status: 502 }
       );
     }
     return NextResponse.json(
-      { error: "Erro inesperado ao gerar a análise." },
+      {
+        error: "Erro inesperado ao gerar a análise.",
+        debug: err instanceof Error ? err.message : String(err),
+      },
       { status: 500 }
     );
   }

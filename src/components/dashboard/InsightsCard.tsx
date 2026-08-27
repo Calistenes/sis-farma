@@ -18,7 +18,11 @@ export function InsightsCard({ isPro }: { isPro: boolean }) {
       });
       const data = await response.json();
       if (!response.ok) {
-        setError(data.error ?? "Não foi possível gerar a análise.");
+        setError(
+          data.debug
+            ? `${data.error} (${data.debug})`
+            : data.error ?? "Não foi possível gerar a análise."
+        );
         return;
       }
       setInsights(data.insights);

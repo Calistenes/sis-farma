@@ -42,7 +42,11 @@ export function AssistantChat() {
       });
       const data = await response.json();
       if (!response.ok) {
-        setError(data.error ?? "Não foi possível responder agora.");
+        setError(
+          data.debug
+            ? `${data.error} (${data.debug})`
+            : data.error ?? "Não foi possível responder agora."
+        );
         return;
       }
       setMessages((prev) => [

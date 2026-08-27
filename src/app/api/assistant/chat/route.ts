@@ -59,6 +59,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ reply: response.text ?? "" });
   } catch (err) {
+    console.error("[assistant/chat] Gemini error:", err);
     if (err instanceof ApiError && err.status === 429) {
       return NextResponse.json(
         { error: "Muitas requisições agora, tente de novo em instantes." },
@@ -67,12 +68,18 @@ export async function POST(request: Request) {
     }
     if (err instanceof ApiError) {
       return NextResponse.json(
-        { error: "O assistente não conseguiu responder agora." },
+        {
+          error: "O assistente não conseguiu responder agora.",
+          debug: `status=${err.status} message=${err.message}`,
+        },
         { status: 502 }
       );
     }
     return NextResponse.json(
-      { error: "Erro inesperado ao consultar o assistente." },
+      {
+        error: "Erro inesperado ao consultar o assistente.",
+        debug: err instanceof Error ? err.message : String(err),
+      },
       { status: 500 }
     );
   }
