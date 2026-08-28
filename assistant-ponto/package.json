@@ -1,0 +1,20 @@
+{
+  "name": "assistant-ponto",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Assistente local para conferir o registro de ponto dos técnicos no Meu RH (TOTVS).",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "login:setup": "tsx src/index.ts --manual-login-setup"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "playwright": "^1.48.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "tsx": "^4.19.1",
+    "typescript": "^5"
+  }
+}
